@@ -1,7 +1,7 @@
-#find_prokaryotic_immune_systems
+# find_prokaryotic_immune_systems
 Automated script that runs DefenseFinder and PADLOC and merges their output into one database
 
-#When using this software, please reference
+# When using this software, please reference
 - Olijslager, L.H., Weijers, D., & Swarts, D.C., Abundance of prokaryotic immune systems is correlated with host optimal growth temperature., unpublished.
 
 - Tesson, F., Hervé, A., Mordret, E., Touchon, M., d’Humières, C., Cury, J., & Bernheim, A. (2022). Systematic and quantitative view of the antiviral arsenal of prokaryotes. Nature communications, 13(1), 2561.
@@ -10,8 +10,7 @@ Automated script that runs DefenseFinder and PADLOC and merges their output into
 
 - Payne, L. J., Todeschini, T. C., Wu, Y., Perry, B. J., Ronson, C. W., Fineran, P. C., ... & Jackson, S. A. (2021). Identification and classification of antiviral defence systems in bacteria and archaea with PADLOC reveals new system types. Nucleic Acids Research, 49(19), 10868-10878.
 
-#installing the software using conda
-
+# installing the software using conda
 ```sh
 conda create -n prok_def -c conda-forge -c bioconda -c padlocbio padloc
 conda activate prok_def
@@ -30,9 +29,7 @@ And, finally:
 conda deactivate
 ```
 
-#########
-#options#
-#########
+# options
 ```sh
 $find_immune_systems.py [-h] [-i INPUT_DB] [-o OUTPUT_DIR] [-c] [-p] [-gff GFF] [-cpu CPU] [--no_padloc]
                               [--no_defensefinder] [-v] [-q] [-m] [-f] [--split_big_files_into SPLIT_BIG_FILES_INTO]
@@ -65,9 +62,8 @@ optional arguments:
                         files will not be split.
 ```
 
-###############
-#example usage#
-###############
+
+# example usage
 #start a session using this command
 ```sh
 conda activate prok_def
@@ -98,9 +94,7 @@ find_immune_systems -p -i proteins_dir -gff gff_dir --no_padloc --no_defensefind
 conda deactivate
 ```
 
-########
-#output#
-########
+# output
 The programme creates:
 
 - combined_output: directory with, for each sequence file provided, a csv file noting, for each immune system found, the system family and subtype identified by DefenseFinder and PADLOC, the operon (noting the gene identifiers of all proteins included in the system), how the genes are called by DefenseFinder and how they're called by PADLOC.
@@ -110,9 +104,7 @@ The programme creates:
 - proteins: directory with protein files as created by Prodigal
 - out_summary.csv: comma seperated file containing a summary of the combined output, noting down how often immune system families were found in what sequence file.
 
-#################
-#Troubleshooting#
-#################
+# Troubleshooting
 - Macsyfinder (DefenseFinder dependable) can have trouble running from on a directory in spaces, even if the spaces aren't included in the given path. Make sure none of the directories you're using include spaces.
 - At the time of release the Macsyfinder (DefenseFinder dependable) version DefenseFinder is working with can have trouble with some big files, eternally hanging on the command. If you're running e.g. big metagenome files, pass a number into --split_big_files_into, which cleaves the files into chunks of this size. In our experience, 8000000 works well.
 - If the code gives "defence finder ref error: [system_name]" or "PADLOC ref error: [system_name]", this is an indication that a found system is not in the reference file (immune_system_list_reference.csv). This can be either because DefenseFinder or PADLOC, respectively, got updated since the making of this code, or the system is relatively uncommon. Simply add the system to the reference file and rerun the code to fix this issue. 
