@@ -66,19 +66,29 @@ optional arguments:
 #example usage
 
 start a session using this command
-```sh conda activate prok_def```
+```sh 
+conda activate prok_def
+```
 
 #Example 1: Run on genome files saved in a directory
-```sh ./find_immune_systems.py -i example_usage/example_genomes```
+```sh 
+./find_immune_systems.py -i example_usage/example_genomes
+```
 
 #Example 2: Run on specfific genome file
-```sh ./find_immune_systems.py -i example_usage/example_genomes/GCF_000264495.1_ASM26449v1_genomic.fna```
+```sh 
+./find_immune_systems.py -i example_usage/example_genomes/GCF_000264495.1_ASM26449v1_genomic.fna
+```
 
 #Example 3: Use on protein sequence, bypassing translation by prodigal
-```sh ./find_immune_systems.py -p -i example_usage/example_proteomes/ -gff example_usage/example_gff/```
+```sh 
+./find_immune_systems.py -p -i example_usage/example_proteomes/ -gff example_usage/example_gff/
+```
 
 #end a session using this command
-```sh conda deactivate```
+```
+sh conda deactivate
+```
 
 # output
 The programme creates:
