@@ -63,36 +63,22 @@ optional arguments:
 ```
 
 
-# example usage
-#start a session using this command
-```sh
-conda activate prok_def
-```
+#example usage
 
-#Run on genome files saved in a directory
-```sh
-find_immune_systems -i genomes_directory
-```
+start a session using this command
+```sh conda activate prok_def```
 
-#Run on specfific genome file
-```sh
-find_immune_systems -i genomes_directory/genome.fna
-```
+#Example 1: Run on genome files saved in a directory
+```sh ./find_immune_systems.py -i example_usage/example_genomes```
 
-#Use on protein sequence, bypassing translation by prodigal
-```sh
-find_immune_systems -p -i proteins_dir -gff gff_dir
-```
+#Example 2: Run on specfific genome file
+```sh ./find_immune_systems.py -i example_usage/example_genomes/GCF_000264495.1_ASM26449v1_genomic.fna```
 
-#Recalculate combined summary file, without rerunning prodigal, DefenseFinder, and PADLOC
-```sh
-find_immune_systems -p -i proteins_dir -gff gff_dir --no_padloc --no_defensefinder
-```
+#Example 3: Use on protein sequence, bypassing translation by prodigal
+```sh ./find_immune_systems.py -p -i example_usage/example_proteomes/ -gff example_usage/example_gff/```
 
-#end a session using these commands
-```sh
-conda deactivate
-```
+#end a session using this command
+```sh conda deactivate```
 
 # output
 The programme creates:
