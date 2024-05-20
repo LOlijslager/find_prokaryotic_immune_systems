@@ -7,25 +7,13 @@ import time
 import os
 
 #other code
-from parse_padloc_and_defensefinder_output import parse_padloc_and_defensefinder_output
+from parse_padloc_and_defensefinder import parse_padloc_and_defensefinder_output
 from run_dependencies import run_dependencies
 
 #times function
 start = timeit.default_timer()
 
-header = "Predict immune systems from nucleic acid or protein fasta file."
-
-#TODO: check runable with both single file or entire dir
-#TODO: check installation guide
-#TODO: per system output
-#TODO: remove meta
-#TODO: make padloc forcibly overwrite
-#TODO: make runable from path when single file is used
-#TODO: Make file possible for single file input
-#TODO: trial run split_big_files_into
-#TODO: Does defense finder now run with spaces in directory?
-#TODO: delete prot_dir thing
-#TODO: remove type
+header = "Predict immune systems from nucleic acid or protein fasta file. Version 1.2."
 
 ##################################
 #Set commandline function options#
@@ -37,7 +25,8 @@ parser.add_argument("-o", "--output_dir",help="Location to save output. Default:
 parser.add_argument("-c", "--high_confidence",help="When high confidence output (i.e. found by both PADLOC and DefenseFinder is required)",action="store_true", required = False)
 parser.add_argument("-p", "--protein",help="File format of input file is not nucleic acids, but protein. In this case, gff needs to be used.", action="store_true", required = False)
 parser.add_argument("-gff",help="GFF file of proteins.", required = False)
-parser.add_argument("-cpu",help="How many cores to use for DefenseFinder and PADLOC. Default: max.", required = False) 
+parser.add_argument("--conflict_winner",help="In case of conflict between identified systems, should DefenseFinder (DF) or PADLOC (PL) overrule? Default: DF.", required = False)
+parser.add_argument("-cpu",help="How many cores to use for DefenseFinder and PADLOC. Default: max.", required = False)
 parser.add_argument("--no_padloc", help="Don't run PADLOC (e.g. because you don't want the output or if already run and stored in right location).",action="store_true", required = False)
 parser.add_argument("--no_defensefinder", help="Don't run defensefinder (e.g. because you don't want the output or if already run and stored in right location).",action="store_true", required = False)
 parser.add_argument("-v", "--verbose",help="Verbose output.",action="store_true", required = False)
@@ -45,6 +34,7 @@ parser.add_argument("-q", "--quiet",help="Quiet output.",action="store_true", re
 parser.add_argument("-m", "--meta",help="When running on a metagenome. Uses metagenome version of prodigal.",action="store_true", required = False)
 parser.add_argument("-f","--force", help="Forcibly overwrites prodigal, defensefinder and PADLOC files that already exist.",action="store_true", required = False)
 parser.add_argument("--split_big_files_into", help="Give a size to splits big files (e.g. very big metagenomes) into for DefenseFinder, as current DefenseFinder version can hang on them. Recommended size: 8000000. If nothing is provided, files will not be split.", required = False)
+
 
 args = parser.parse_args()
 
@@ -88,6 +78,17 @@ else:
 if not args.cpu:
     cpu = str(os.cpu_count())
 else:
+    cpu = args.cpu
+
+
+if (not args.conflict_winner) or (args.conflict_winner == "DF"):
+    conflict_winner = "DF"
+elif args.conflict_winner == "PL":
+    conflict_winner = "PL"
+else:
+    raise Exception("Conflict winner not recognised. Please provide DF or PL.")
+    
+    
     cpu = args.cpu
 
 if args.meta:
@@ -147,7 +148,9 @@ for file in input_db:
 ##############
 #parse output#
 ##############
-parse_padloc_and_defensefinder_output(accessions,output_dir,padloc_output_dir,df_output_dir,combined_output_dir,high_confidence=args.high_confidence,output_file="output_summary.csv",ref_file="immune_system_list_reference.csv")
+parse_padloc_and_defensefinder_output(accessions,output_dir,padloc_output_dir,df_output_dir,combined_output_dir,
+                                      conflict_winner,args.quiet,high_confidence=args.high_confidence,
+                                      output_file="output_summary.csv",ref_file="immune_system_list_reference.csv")
 
 
 stop = timeit.default_timer()

@@ -1,5 +1,4 @@
-accession,system family DefenseFinder,system family PADLOC,subtype DefenseFinder,subtype PADLOC,operon,genes DefenseFinder,genes PADLOC
+accession,system family DefenseFinder,system family PADLOC,subtype DefenseFinder,subtype PADLOC,genes,genes DefenseFinder,genes PADLOC
 GCF_003383595.3_ASM338359v3_genomic,N.A.,Cas,N.A.,cas_type_other,NZ_CP033058.2_719;NZ_CP033058.2_720;NZ_CP033058.2_721;NZ_CP033058.2_722,N.A.,Cas1;Cas1;Cas2_II;Csn2
 GCF_003383595.3_ASM338359v3_genomic,Retron,Retron,Retron_I_C,retron_I-C,NZ_CP033058.2_1085,RT_1_C2,RT-Toprim_I-C
-GCF_003383595.3_ASM338359v3_genomic,Cas,N.A.,CAS_Cluster,N.A.,NZ_CP033058.2_720;NZ_CP033058.2_721,cas1_I_II_III_IV_V_VI_5;cas2_I_II_III_IV_V_VI_6,N.A.
 GCF_003383595.3_ASM338359v3_genomic,RM,N.A.,RM_Type_II,N.A.,NZ_CP033058.2_798;NZ_CP033058.2_800,Type_II_REases;Type_II_MTases,N.A.

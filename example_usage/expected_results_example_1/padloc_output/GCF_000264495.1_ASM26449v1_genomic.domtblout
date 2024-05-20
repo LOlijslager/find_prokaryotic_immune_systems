@@ -5107,8 +5107,8 @@ NC_017954.1_814      -            239 GajA_00007           PDLC00067    604     
 # Version:         3.3.2 (Nov 2020)
 # Pipeline mode:   SEARCH
 # Query file:      /home/lisa/miniconda3/envs/prok_def/data/hmm/padlocdb.hmm
-# Target file:     /home/lisa/prok_def_prog_test/results/proteins/GCF_000264495.1_ASM26449v1_genomic.faa
-# Option settings: hmmsearch --domtblout /home/lisa/prok_def_prog_test/results/padloc_output/GCF_000264495.1_ASM26449v1_genomic.domtblout --acc --noali --cpu 16 /home/lisa/miniconda3/envs/prok_def/data/hmm/padlocdb.hmm /home/lisa/prok_def_prog_test/results/proteins/GCF_000264495.1_ASM26449v1_genomic.faa 
-# Current dir:     /home/lisa/prok_def_prog_test
-# Date:            Mon Nov 13 16:55:44 2023
+# Target file:     /home/lisa/prok_def_programme_rebuttal/expected_results_example_1/proteins/GCF_000264495.1_ASM26449v1_genomic.faa
+# Option settings: hmmsearch --domtblout /home/lisa/prok_def_programme_rebuttal/expected_results_example_1/padloc_output/GCF_000264495.1_ASM26449v1_genomic.domtblout --acc --noali --cpu 16 /home/lisa/miniconda3/envs/prok_def/data/hmm/padlocdb.hmm /home/lisa/prok_def_programme_rebuttal/expected_results_example_1/proteins/GCF_000264495.1_ASM26449v1_genomic.faa 
+# Current dir:     /home/lisa/prok_def_programme_rebuttal
+# Date:            Mon May 20 17:15:45 2024
 # [ok]

@@ -1,4 +1,5 @@
 System_name,DefenceFinder,PADLOC
+skip,,DMS/GAO
 Cas,Cas,cas
 RM,RM,RM
 CBASS,CBASS,cbass
@@ -80,6 +81,13 @@ AbiG,,AbiG
 AbiQ,,AbiQ
 AbiL,,AbiL
 AbiV,,AbiV
+AbiT,,AbiT
+AbiI,,AbiI
+AbiN,,AbiN
 Old,,Old
 AbiU,,AbiU
-GAO,Gao_Her/Gao_RL,GAO
+Her,Gao_Her,
+RL,Gao_RL,
+gop,Rst_gop_beta_cll,gop
+NixI,NixI,
+Tin,,Tin
