@@ -63,7 +63,7 @@ optional arguments:
 ```
 
 
-#example usage
+# example usage
 
 start a session using this command
 ```sh 
