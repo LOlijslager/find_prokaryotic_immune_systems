@@ -2,7 +2,7 @@
 Automated script that runs DefenseFinder and PADLOC and merges their output into one database
 
 # When using this software, please reference
-- Olijslager, L.H., Weijers, D., & Swarts, D.C., Abundance of prokaryotic immune systems is correlated with host optimal growth temperature., unpublished.
+- Olijslager, L. H., Weijers, D., & Swarts, D. C. (2024). Distribution of specific prokaryotic immune systems correlates with host optimal growth temperature. NAR Genomics and Bioinformatics, 6(3), lqae105.
 
 - Tesson, F., Hervé, A., Mordret, E., Touchon, M., d’Humières, C., Cury, J., & Bernheim, A. (2022). Systematic and quantitative view of the antiviral arsenal of prokaryotes. Nature communications, 13(1), 2561.
 
