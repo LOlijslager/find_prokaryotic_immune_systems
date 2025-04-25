@@ -10,6 +10,9 @@ Automated script that runs DefenseFinder and PADLOC and merges their output into
 
 - Payne, L. J., Todeschini, T. C., Wu, Y., Perry, B. J., Ronson, C. W., Fineran, P. C., ... & Jackson, S. A. (2021). Identification and classification of antiviral defence systems in bacteria and archaea with PADLOC reveals new system types. Nucleic Acids Research, 49(19), 10868-10878.
 
+If also running the custom systems, include:
+van den Berg, D. F., Costa, A. R., Esser, J. Q., Stanciu, I., Geissler, J. Q., Zoumaro-Djayoon, A. D., ... & Brouns, S. J. (2024). Bacterial homologs of innate eukaryotic antiviral defenses with anti-phage activity highlight shared evolutionary roots of viral defenses. Cell Host & Microbe, 32(8), 1427-1443.
+
 # installing the software using conda
 ```sh
 conda create -n prok_def -c conda-forge -c bioconda -c padlocbio padloc
@@ -31,38 +34,50 @@ conda deactivate
 
 # options
 ```sh
-$find_immune_systems.py [-h] [-i INPUT_DB] [-o OUTPUT_DIR] [-c] [-p] [-gff GFF] [-cpu CPU] [--no_padloc]
-                              [--no_defensefinder] [-v] [-q] [-m] [-f] [--split_big_files_into SPLIT_BIG_FILES_INTO]
+$find_immune_systems.py [-h] [-i INPUT_DB] [-o OUTPUT_DIR] [-c] [-p] [-gff GFF] [--custom_system_dir CUSTOM_SYSTEM_DIR]     
+                              [--conflict_winner CONFLICT_WINNER] [-cpu CPU] [--no_padloc] [--no_defensefinder]                   
+                              [--reference_file REFERENCE_FILE] [--skip_DS_candidates] [--cut_no_island CUT_NO_ISLAND] [-v] [-q]  
+                              [-m] [-f] [--split_big_files_into SPLIT_BIG_FILES_INTO] 
 
-Predict immune systems from nucleic acid or protein fasta file.
+Predict immune systems from nucleic acid or protein fasta file. Version 0.3.0.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
-  -i INPUT_DB, --input_db INPUT_DB
+  -i, --input_db INPUT_DB
                         File or directory to be analysed in fasta format.
-  -o OUTPUT_DIR, --output_dir OUTPUT_DIR
+  -o, --output_dir OUTPUT_DIR
                         Location to save output. Default: results
   -c, --high_confidence
                         When high confidence output (i.e. found by both PADLOC and DefenseFinder is required)
-  -p, --protein         File format of input file is not nucleic acids, but protein. In this case, gff needs to be
-                        used.
+  -p, --protein         File format of input file is not nucleic acids, but protein. In this case, gff needs to be used.
   -gff GFF              GFF file of proteins.
+  --custom_system_dir CUSTOM_SYSTEM_DIR
+                        Directory with custom HMM-profiles to search for. Also requires systems.csv with the system compositions
+                        and bitscores, formatted as in the systems.csv example file. Warning: these systems will only be checked
+                        for perfect overlap.
+  --conflict_winner CONFLICT_WINNER
+                        In case of conflict between identified systems, should DefenseFinder (DF) or PADLOC (PL) overrule?
+                        Default: DF.
   -cpu CPU              How many cores to use for DefenseFinder and PADLOC. Default: max.
-  --no_padloc           Don't run PADLOC (e.g. because you don't want the output or if already run and stored in right
-                        location).
-  --no_defensefinder    Don't run defensefinder (e.g. because you don't want the output or if already run and stored
-                        in right location).
+  --no_padloc           Don't run PADLOC or don't include the results if already run).
+  --no_defensefinder    Don't run defensefinder or don't include the results if already run.
+  --reference_file REFERENCE_FILE
+                        Provide filepath for the systems reference file. If not, reference file is searched for in the current
+                        working directory and the directory this script is located in.
+  --skip_DS_candidates  Skips defence system candidates identified by PADLOC (i.e. the HEC and PDC systems).
+  --cut_no_island CUT_NO_ISLAND
+                        Removes matches that are not found within 20 proteins of another immune system. Provide system names
+                        seperated by ',' (e.g. SoFIC,PD-T4-7). Provide 'All' to do this for all systems (Keep in mind this will
+                        drastically decrease your output (e.g. CRISPR-Cas systems usually aren't)).
   -v, --verbose         Verbose output.
   -q, --quiet           Quiet output.
   -m, --meta            When running on a metagenome. Uses metagenome version of prodigal.
   -f, --force           Forcibly overwrites prodigal, defensefinder and PADLOC files that already exist.
   --split_big_files_into SPLIT_BIG_FILES_INTO
                         Give a size to splits big files (e.g. very big metagenomes) into for DefenseFinder, as current
-                        DefenseFinder version can hang on them. Recommended size: 8000000. If nothing is provided,
-                        files will not be split.
+                        DefenseFinder version can hang on them. Recommended size: 8000000. If nothing is provided, files will not
+                        be split.
 ```
-
-
 # example usage
 
 start a session using this command
@@ -83,6 +98,11 @@ conda activate prok_def
 #Example 3: Use on protein sequence, bypassing translation by prodigal
 ```sh 
 ./find_immune_systems.py -p -i example_usage/example_proteomes/ -gff example_usage/example_gff/
+```
+
+#Example 4: Our recommended settings, which include some added systems not currently in PADLOC or DefenceFinder, and which predicts only proven defence system proteins and which reduces predictions that appear to be over-predicted in our hands by requiring them to be found in defence islands.
+```sh 
+./find_immune_systems.py -i example_usage/example_genomes --custom_system_dir custom_systems --skip_DS_candidates --cut_no_island SoFIC,PD-T4-7
 ```
 
 #end a session using this command

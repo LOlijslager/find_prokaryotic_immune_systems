@@ -1,0 +1,12 @@
+﻿System,Subtype,HMM-profile,Required,Bitscore
+6A_MBL,6A_MBL,Cap2_3.hmm,TRUE,130
+6A_MBL,6A_MBL,MblB.hmm,TRUE,130
+Erebus,Erebus,Erebus.hmm,TRUE,190
+Hermes,Hermes,Hermes.hmm,TRUE,300
+Hypnos,Hypnos,Hypnos.hmm,TRUE,350
+Prometheus,Prometheus,Prometheus.hmm,TRUE,2000
+Thoeris,Thoeris_III,ThcA.hmm,TRUE,75
+Thoeris,Thoeris_III,ThcB1.hmm,FALSE,50
+Thoeris,Thoeris_III,ThcB2.hmm,FALSE,50
+Thoeris,Thoeris_III,ThcB3.hmm,FALSE,50
+Thoeris,Thoeris_III,ThcB4.hmm,TRUE,75

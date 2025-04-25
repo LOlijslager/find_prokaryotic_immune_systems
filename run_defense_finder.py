@@ -6,10 +6,14 @@ def run_defense_finder(prot_file,prot_dir,output_dir,systems_dir,genes_dir,hmmer
     prot_file_path = os.path.join(prot_dir,prot_file)
     base_name = os.path.splitext(prot_file)[0]
 
-    if force or (not os.path.isfile(os.path.join(systems_dir,"systems_"+base_name+".tsv"))):
-        systems_file = os.path.join(output_dir,"defense_finder_systems.tsv")
-        genes_file = os.path.join(output_dir,"defense_finder_genes.tsv")
-        hmmer_file = os.path.join(output_dir,"defense_finder_hmmer.tsv")
+    final_systems_file = os.path.join(systems_dir,base_name+"_defense_finder_systems.tsv")
+    final_genes_file = os.path.join(genes_dir,base_name+"_defense_finder_genes.tsv")
+    final_hmmer_file = os.path.join(hmmer_dir,base_name+"_defense_finder_hmmer.tsv")
+
+    if force or (not os.path.isfile(final_systems_file)):
+        systems_file = os.path.join(output_dir,base_name+"_defense_finder_systems.tsv")
+        genes_file = os.path.join(output_dir,base_name+"_defense_finder_genes.tsv")
+        hmmer_file = os.path.join(output_dir,base_name+"_defense_finder_hmmer.tsv")
             
         if (split_big_file_number!=0) and (os.path.getsize(os.path.join(prot_dir,prot_file)) > split_big_file_number): #current version of defensefinder uses a version of macsyfinder which cannot handle big files
             split_file_dir = os.path.join(output_dir, "split_genome_files")
@@ -88,8 +92,8 @@ def run_defense_finder(prot_file,prot_dir,output_dir,systems_dir,genes_dir,hmmer
                 print (cmd)
             subprocess.run(cmd,shell=True,stdout=subprocess.DEVNULL)
         
-            shutil.move(systems_file, os.path.join(systems_dir,"systems_"+base_name+".tsv"))
-            shutil.move(genes_file, os.path.join(genes_dir,"genes_"+base_name+".tsv"))
-            shutil.move(hmmer_file, os.path.join(hmmer_dir,"hmmer_"+base_name+".tsv"))
+            shutil.move(systems_file, final_systems_file)
+            shutil.move(genes_file, final_genes_file)
+            shutil.move(hmmer_file, final_hmmer_file)
             os.remove(prot_file_path+".idx")
         

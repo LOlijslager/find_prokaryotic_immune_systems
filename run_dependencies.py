@@ -3,10 +3,11 @@ import os
 from run_prodigal import run_prodigal
 from run_defense_finder import run_defense_finder
 from run_padloc import run_padloc
+from run_hmmer import run_hmmer
 
-def run_dependencies (file, input_dir, prot_dir, gff_dir, df_output_dir, df_systems_dir, df_genes_dir,
-                      df_hmmer_dir, padloc_output_dir, cpu, protein, no_defensefinder, no_padloc,
-                      meta, time, split_big_file_number, force, verbose):
+def run_dependencies (file, input_dir, prot_dir, gff_dir, df_output_dir, df_systems_dir, df_genes_dir,df_hmmer_dir,
+                      padloc_output_dir, HMMER_output_dir, cpu, custom_system_dir, protein,
+                      no_defensefinder, no_padloc,meta, time, split_big_file_number, force, verbose):
     #################
     #predict protein#
     #################
@@ -28,7 +29,7 @@ def run_dependencies (file, input_dir, prot_dir, gff_dir, df_output_dir, df_syst
         ####################
         if not no_defensefinder:
             if verbose:
-                    print (file, " immune systems being predicted using defensefinder, time: ", time.strftime("%H:%M:%S", time.localtime()))
+                print (file, " immune systems being predicted using defensefinder, time: ", time.strftime("%H:%M:%S", time.localtime()))
             run_defense_finder(prot_file,prot_dir,df_output_dir,df_systems_dir,df_genes_dir,df_hmmer_dir,split_big_file_number,cpu,force,verbose)
 
         ############
@@ -36,5 +37,14 @@ def run_dependencies (file, input_dir, prot_dir, gff_dir, df_output_dir, df_syst
         ############
         if not no_padloc:
             if verbose:
-                    print (file, " immune systems being predicted using PADLOC time: ", time.strftime("%H:%M:%S", time.localtime()))
+                print (file, " immune systems being predicted using PADLOC time: ", time.strftime("%H:%M:%S", time.localtime()))
             run_padloc(prot_file,prot_dir,gff_file,gff_dir,padloc_output_dir,cpu,force,verbose)
+
+        ##########################################################
+        #run HMMER on any additional systems provided by the user#
+        ##########################################################
+        if custom_system_dir:
+            if verbose:
+                print (file, " additional immune systems being predicted using HMMER time: ", time.strftime("%H:%M:%S", time.localtime()))
+            run_hmmer(custom_system_dir,custom_system_dir,prot_file,prot_dir,HMMER_output_dir,cpu,force,verbose)
+            

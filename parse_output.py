@@ -1,14 +1,18 @@
 import os
 import csv
 
-##################################
-#Counting how many hits DF&PADLOC#
-##################################
+from parse_defensefinder import parse_df
+from parse_padloc import parse_padloc
+from parse_hmmer import parse_custom_systems
 
-def parse_padloc_and_defensefinder_output(accessions,output_dir,padloc_dir,df_dir,combined_output_dir,
-                                          conflict_winner,quiet,skip_DS_candidates,no_defensefinder,no_padloc,
-                                          high_confidence,cut_no_island,ref_file,output_file="output_summary.csv",
-                                          warning_file = "warnings.txt"):
+#################################################
+#Counting how many hits DF&PADLOC&custom_systems#
+#################################################
+
+def parse_output(accessions,output_dir,padloc_dir,df_dir,hmm_file_dir,combined_output_dir,
+                 custom_system_dir,conflict_winner,quiet,skip_DS_candidates,
+                 no_defensefinder,no_padloc,cut_no_island,high_confidence,ref_file,
+                 output_file="output_summary.csv",warning_file = "warnings.txt"):
     
     warning_file = os.path.join(output_dir,"warnings.txt")
     
@@ -28,11 +32,15 @@ def parse_padloc_and_defensefinder_output(accessions,output_dir,padloc_dir,df_di
         df_db_dict = {}
     else:
         df_db_dict = parse_df(df_dir,ref_dict)
-
-    db_dictionary,defence_system_list=combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_output_dir,
-                                                               high_confidence,cut_no_island,warning_file,conflict_winner,
-                                                               quiet)
-
+        
+    if custom_system_dir != None:
+        hmmer_db_dict = parse_custom_systems(accessions,custom_system_dir,hmm_file_dir)
+    else:
+        hmmer_db_dict = {}
+    
+    db_dictionary,defence_system_list=combine_output(accessions,padloc_db_dict,df_db_dict,hmmer_db_dict,combined_output_dir,
+                                                     high_confidence,cut_no_island,warning_file,conflict_winner,quiet)
+    
     write_summary_file(output_dir,db_dictionary,defence_system_list,output_file)
 
 def load_reference_file(ref_file):
@@ -63,114 +71,9 @@ def load_reference_file(ref_file):
             start = False
     return ref_dict
 
-def parse_padloc(padloc_dir,ref_dict,skip_DS_candidates):
-    ###parse PADLOC
-    padloc_db_dict = {}
-    if os.path.exists(padloc_dir):
-        for padloc_file in os.listdir(padloc_dir):
-            if padloc_file.endswith(".csv"):
-                accession = padloc_file.replace("_padloc.csv", "")
-                padloc_db_dict[accession] = []
-                padloc_file = open(os.path.join(padloc_dir,padloc_file), mode = "r", encoding='utf-8-sig')
-                padloc_list = csv.reader(padloc_file,quotechar='"',delimiter=",",quoting=csv.QUOTE_ALL, skipinitialspace=True)
 
-                start = True
-                system_numbers = []
-                systems_dict = {}
-                for line_list in padloc_list:
-                    if start:
-                        for i in range(len(line_list)):
-                            if line_list[i] == "system":
-                                system_index = i
-                            if line_list[i] == "system.number":
-                                system_number_index = i
-                            if line_list[i] == "target.name":
-                                gene_index = i
-                            if line_list[i] == "protein.name":
-                                protein_name_index = i
-                        start = False
-                    else:
-                        #get relevant values
-                        system = line_list[system_index].split("_")[0]
-                        subtype = line_list[system_index]
-                        gene = line_list[gene_index]
-                        protein_name = line_list[protein_name_index]
-
-                        #check if this instance of the system was already added
-                        system_number = line_list[system_number_index]
-                        if subtype != "DRT_other": #these systems also exist as retron XIII and are identified solely as such by the online padloc version
-                            if system_number not in systems_dict:
-                                if system in ref_dict:
-                                    system = ref_dict[system]
-                                elif system.startswith("HEC") or system.startswith("PDC"):
-                                    if skip_DS_candidates:
-                                        system = "skip"
-                                else:
-                                    print ("padloc ref error:", system)
-                                if system != "skip": #Like DMS with look like these are unfinished potential partial systems (or just plain duplicates), not necessary to investigate on full genomes like these
-                                    systems_dict[system_number] = [system, subtype, [gene],[protein_name]]
-                            else:
-                                systems_dict[system_number][2] = systems_dict[system_number][2] + [gene]
-                                systems_dict[system_number][3] = systems_dict[system_number][3] + [protein_name]
-                #remove systems identified more than once that are identified as the same master family (happens for e.g. nhi and AbiO which are counted as the same system by DefenseFinder)
-                temp = []
-                res = dict()
-                for key, val in systems_dict.items():
-                    if val not in temp:
-                        temp.append(val)
-                        res[key] = val
-                systems_dict = res.copy()
-                #make final list of systems
-                for key in systems_dict:
-                    system = systems_dict[key][0]
-                    subtype = systems_dict[key][1]
-                    gene_list = ";".join(systems_dict[key][2])
-                    protein_name_list = ";".join(systems_dict[key][3])
-                    padloc_db_dict[accession]= padloc_db_dict[accession]+[[system,subtype,gene_list,protein_name_list]]
-                padloc_file.close()
-    return padloc_db_dict
-
-def parse_df(df_dir,ref_dict):
-    #parse defence finder
-    df_db_dict = {}
-    for df_file in os.listdir(os.path.join(df_dir,"systems")):
-        if df_file.endswith(".tsv"):
-            accession = df_file.replace("_defense_finder_systems.tsv","")
-            df_db_dict[accession] = []
-            df = open(os.path.join(df_dir,"systems",df_file), mode = "r", encoding='utf-8-sig')
-            df_list = csv.reader(df,quotechar='"',delimiter="\t",quoting=csv.QUOTE_ALL, skipinitialspace=True)
-
-            start = True
-            for line_list in df_list:
-                if start:
-                    for i in range(len(line_list)):
-                        if line_list[i] == "type":
-                            system_index = i
-                        elif line_list[i] == "subtype":
-                            subtype_index = i
-                        elif line_list[i] == "protein_in_syst":
-                            genes_index = i
-                        elif line_list[i] == "name_of_profiles_in_sys":
-                            gene_names_index = i
-
-                    start = False
-                else:
-                    #get relevant values
-                    system = line_list[system_index]
-                    if system in ref_dict:
-                        if system != "skip":
-                            system = ref_dict[system]
-                    else:
-                        print ("defence finder ref error:", system)
-                    subtype = line_list[subtype_index]
-                    gene_list = ";".join(line_list[genes_index].split(","))
-                    gene_names = line_list[gene_names_index]
-
-                    df_db_dict[accession] = df_db_dict[accession]+[[system,subtype,gene_list,gene_names]]
-    return df_db_dict
-
-def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_output_dir,
-                             high_confidence,cut_no_island,warning_file,conflict_winner,quiet):
+def combine_output(accessions,padloc_db_dict,df_db_dict,hmmer_db_dict,combined_output_dir,high_confidence,
+                   cut_no_island,warning_file,conflict_winner,quiet):
     #How many systems are found in total
     defence_system_list = [] #all system families for summary file
     db_dictionary = {} #all systems for summary file
@@ -179,6 +82,7 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
         combined_dict = {}
         db_dictionary[accession] = []
 
+        #rewrite dictionaries
         PL_dict = {}
         if accession in padloc_db_dict.keys():
             for system in padloc_db_dict[accession]:
@@ -189,9 +93,11 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
             for system in df_db_dict[accession]:
                 DF_dict[";".join(system)] = system
 
+        #remove internal conflict
         PL_dict = remove_internal_conflict(PL_dict, DF_dict, "PL")
         DF_dict = remove_internal_conflict(DF_dict, PL_dict, "DF")
 
+        #remove conflict between padloc and defencefinder and all three individual db to combined dict
         if accession in padloc_db_dict.keys():
             for system in PL_dict.keys():
                 system_db = PL_dict[system]
@@ -202,13 +108,28 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
                 system_db = DF_dict[system]
                 combined_dict = test_system_for_overlap(system_db, combined_dict, "DF", PL_dict, conflict_winner, accession, quiet, warning_file)
 
+        if accession in hmmer_db_dict.keys():
+            for system_db in hmmer_db_dict[accession]:
+                genes = system_db[2]
+                if genes in combined_dict.keys():
+                    if not quiet:
+                        print ("Warning: customly searched for system overlaps perfect with system in DefenseFinder or PADLOC. custom system kept. Pertaining: sequence %s, conflicting_system %s, genes %s"%(accession, combined_dict[genes], genes))
+                    with open (warning_file, "a+") as w_f:
+                        w_f.write("Warning: customly searched for system overlaps perfect with system in DefenseFinder or PADLOC. custom system kept. Pertaining: sequence %s, conflicting_system %s, genes %s"%(accession, combined_dict[genes], genes))
+                    combined_dict[genes]["AS"] = system_db
+                else:
+                    combined_dict[genes] = {"AS":system_db}
+
+        #write output file
         with open(os.path.join(combined_output_dir,accession+".csv"), "w") as output_file:
-            output_file.write("accession,system family DefenseFinder,system family PADLOC,subtype DefenseFinder,subtype PADLOC,present in defence island?, genes,genes DefenseFinder,genes PADLOC\n")             
+            output_file.write("accession,system family DefenseFinder,system family PADLOC,system family custom,subtype DefenseFinder,subtype PADLOC,subtype custom,present in defence island?, genes,genes DefenseFinder,genes PADLOC, genes custom\n")           
             
-            if high_confidence: #in case high confidence (i.e. found by both PADLOC and DF) is desired
+            if high_confidence: #in case high confidence (i.e. found by both PADLOC and DF or custom system) is desired
                 genes_list = list(combined_dict.keys())
                 for genes in genes_list:
-                    if ("DF" not in combined_dict[genes]) or ("PL" not in combined_dict[genes]):
+                    if "AS" in combined_dict[genes]:
+                        pass
+                    elif ("DF" not in combined_dict[genes]) or ("PL" not in combined_dict[genes]):
                         combined_dict.pop(genes)
 
             # Check whether proteins systems are present in a defence island
@@ -222,9 +143,25 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
                 combined_dict[defence_system]["present_in_defence_island"] = present_in_defence_island
 
                 #removes proteins that are not found in a defence island (i.e. within 20 proteins of another system
-                if cut_no_island: 
+                skip = False
+                if cut_no_island == True:
                     if not present_in_defence_island:
                         combined_dict.pop(defence_system)
+                elif type(cut_no_island) == list:
+                    if not present_in_defence_island:
+                        if "PL" in combined_dict[defence_system]:
+                            if combined_dict[defence_system]["PL"][0] in cut_no_island:
+        ##                            print (DS_dict)
+    ##                            print (combined_dict[defence_system]["PL"][0])  
+                                combined_dict.pop(defence_system)
+                                skip = True
+                        if not skip:
+                            if "DF" in combined_dict[defence_system]:
+                                if combined_dict[defence_system]["DF"][0] in cut_no_island:
+                                    print (combined_dict[defence_system]["DF"][0])  
+                                    combined_dict.pop(defence_system)
+                    
+##                    print (system_fam, cut_no_island)
                         
             #combine data
             for genes in combined_dict.keys():
@@ -233,10 +170,13 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
                 #make summary file for accession
                 system_PL = "N.A."
                 system_DF = "N.A."
+                system_AS = "N.A."  
                 subtype_PL = "N.A."
                 subtype_DF = "N.A."
+                subtype_AS = "N.A."
                 genes_DF = "N.A."
                 genes_PL = "N.A."
+                genes_AS = "N.A."
                 defence_island = str(info["present_in_defence_island"])
 
                 if "DF" in info.keys():
@@ -253,11 +193,21 @@ def combine_df_padloc_output(accessions,padloc_db_dict,df_db_dict,combined_outpu
                     genes_PL = info["PL"][3].replace(",",";")
                     if system_PL not in defence_system_list:
                         defence_system_list.append(system_PL)
+                        
+                if "AS" in info.keys():
+                    system_AS = info["AS"][0]
+                    subtype_AS = info["AS"][1]
+                    genes_AS = "N.A."
+                    genes_AS = info["AS"][3].replace(",",";")
+                    if system_AS not in defence_system_list:
+                        defence_system_list.append(system_AS)
 
-                output_file.write("%s,%s,%s,%s,%s,%s,%s,%s,%s\n"%(accession,system_DF,system_PL,subtype_DF,subtype_PL,defence_island,genes,genes_DF,genes_PL))
+                output_file.write("%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s\n"%(accession,system_DF,system_PL,system_AS,subtype_DF,subtype_PL,subtype_AS,defence_island,genes,genes_DF,genes_PL,genes_AS))
 
                 #make db for summary file
-                if system_PL == system_DF:
+                if system_AS != "N.A.":
+                    db_dictionary[accession].append(system_AS)
+                elif system_PL == system_DF:
                     db_dictionary[accession].append(system_PL)
                 else:
                     if system_PL != "N.A.":
@@ -393,12 +343,11 @@ def test_system_for_overlap(db, combined_dict, testing, db_from_other, conflict_
                 combined_dict[genes]["PL"] = db
             else:
                 combined_dict[genes] = {"PL":db}
-        else:
+        elif testing == "DF":
             if genes in combined_dict.keys():
                 combined_dict[genes]["DF"] = db
             else:
                 combined_dict[genes] = {"DF":db}
-        
     return combined_dict
 
 # Function to parse protein systems and return a list of tuples (contig, position)
