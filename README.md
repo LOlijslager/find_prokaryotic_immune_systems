@@ -68,7 +68,7 @@ options:
   --cut_no_island CUT_NO_ISLAND
                         Removes matches that are not found within 20 proteins of another immune system. Provide system names
                         seperated by ',' (e.g. SoFIC,PD-T4-7). Provide 'All' to do this for all systems (Keep in mind this will
-                        drastically decrease your output (e.g. CRISPR-Cas systems usually aren't)).
+                        drastically decrease your output (e.g. CRISPR-Cas systems usually aren'&nbsp;t)).
   -v, --verbose         Verbose output.
   -q, --quiet           Quiet output.
   -m, --meta            When running on a metagenome. Uses metagenome version of prodigal.
