@@ -1,6 +1,0 @@
-replicon	hit_id	gene_name	hit_pos	model_fqn	sys_id	sys_loci	locus_num	sys_wholeness	sys_score	sys_occ	hit_gene_ref	hit_status	hit_seq_len	hit_i_eval	hit_score	hit_profile_cov	hit_seq_cov	hit_begin_match	hit_end_match	counterpart	used_in
-UserReplicon	NZ_CP033058.2_720	cas1_I_II_III_IV_V_VI_5	720	defense-finder-models/Cas/Cas/CAS_Cluster	UserReplicon_CAS_Cluster_1	1	1	0.040	2.000	1	cas1_I_II_III_IV_V_VI_1	mandatory	158	4.9e-47	156.600	0.487	0.880	2	140		
-UserReplicon	NZ_CP033058.2_721	cas2_I_II_III_IV_V_VI_6	721	defense-finder-models/Cas/Cas/CAS_Cluster	UserReplicon_CAS_Cluster_1	1	1	0.040	2.000	1	cas2_I_II_III_IV_V_VI_1	mandatory	110	7.2e-25	83.700	0.862	0.900	6	104		
-UserReplicon	NZ_CP033058.2_798	Type_II_REases	798	defense-finder-models/RM/RM/RM_Type_II	UserReplicon_RM_Type_II_1	1	1	1.000	2.000	1	Type_II_REases	mandatory	141	6.7e-15	51.500	0.584	0.979	1	138		
-UserReplicon	NZ_CP033058.2_800	Type_II_MTases	800	defense-finder-models/RM/RM/RM_Type_II	UserReplicon_RM_Type_II_1	1	1	1.000	2.000	1	Type_II_MTases	mandatory	167	7.4e-38	126.700	0.437	0.964	6	166		
-UserReplicon	NZ_CP033058.2_1085	RT_1_C2	1085	defense-finder-models/DefenseFinder_5/Retron/Retron_I_C	UserReplicon_Retron_I_C_1	1	1	1.000	1.000	1	RT_1_C1	mandatory	484	4.2e-155	513.500	0.710	0.855	15	428		

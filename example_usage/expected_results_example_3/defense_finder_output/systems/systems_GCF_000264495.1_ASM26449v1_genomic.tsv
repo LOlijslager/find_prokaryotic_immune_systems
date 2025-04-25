@@ -1,3 +1,0 @@
-sys_id	type	subtype	sys_beg	sys_end	protein_in_syst	genes_count	name_of_profiles_in_sys
-UserReplicon_CAS_Class1-Subtype-I-A_1	Cas	CAS_Class1-Subtype-I-A	NC_017954.1_1019	NC_017954.1_1025	NC_017954.1_1019,NC_017954.1_1020,NC_017954.1_1021,NC_017954.1_1022,NC_017954.1_1023,NC_017954.1_1024,NC_017954.1_1025	7	cas3HD_I_1,cas3_I_5,cas8a3_I-A_1,cas5_I-A_4,cas7_I-A_1,csa5gr11_I-A_7,casR_I_1
-UserReplicon_CAS_Class1-Subtype-I-A_2	Cas	CAS_Class1-Subtype-I-A	NC_017954.1_1041	NC_017954.1_1046	NC_017954.1_1041,NC_017954.1_1043,NC_017954.1_1044,NC_017954.1_1045,NC_017954.1_1046	5	cas6_I-A_III-D_3,cas4_I-A_2,cas1_I_II_III_IV_V_VI_10,cas4_I_II_III_IV_V_VI_1,casR_I_2

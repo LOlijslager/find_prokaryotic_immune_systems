@@ -1,5 +1,0 @@
-accession,system family DefenseFinder,system family PADLOC,subtype DefenseFinder,subtype PADLOC,genes,genes DefenseFinder,genes PADLOC
-GCF_000264495.1_ASM26449v1_genomic,N.A.,Argonaute,N.A.,argonaute_solo,NC_017954.1_631,N.A.,PprPIWI
-GCF_000264495.1_ASM26449v1_genomic,N.A.,RM,N.A.,RM_type_II,NC_017954.1_691;NC_017954.1_692,N.A.,MTase_II;REase_II
-GCF_000264495.1_ASM26449v1_genomic,Cas,Cas,CAS_Class1-Subtype-I-A,cas_type_I-A,NC_017954.1_1019;NC_017954.1_1020;NC_017954.1_1021;NC_017954.1_1022;NC_017954.1_1023;NC_017954.1_1024;NC_017954.1_1025,cas3HD_I_1;cas3_I_5;cas8a3_I-A_1;cas5_I-A_4;cas7_I-A_1;csa5gr11_I-A_7;casR_I_1,Cas3a2;Cas3a1;Cas8a;Cas5a;Cas7a;Cas11a;CARF3--CARF
-GCF_000264495.1_ASM26449v1_genomic,Cas,Cas,CAS_Class1-Subtype-I-A,cas_type_other,NC_017954.1_1041;NC_017954.1_1043;NC_017954.1_1044;NC_017954.1_1045;NC_017954.1_1046,cas6_I-A_III-D_3;cas4_I-A_2;cas1_I_II_III_IV_V_VI_10;cas4_I_II_III_IV_V_VI_1;casR_I_2,Cas6;Cas4;Cas1a;Cas4;CARF3--CARF

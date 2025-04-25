@@ -1,4 +1,0 @@
-sys_id	type	subtype	sys_beg	sys_end	protein_in_syst	genes_count	name_of_profiles_in_sys
-UserReplicon_CAS_Cluster_1	Cas	CAS_Cluster	NZ_CP033058.2_720	NZ_CP033058.2_721	NZ_CP033058.2_720,NZ_CP033058.2_721	2	cas1_I_II_III_IV_V_VI_5,cas2_I_II_III_IV_V_VI_6
-UserReplicon_RM_Type_II_1	RM	RM_Type_II	NZ_CP033058.2_798	NZ_CP033058.2_800	NZ_CP033058.2_798,NZ_CP033058.2_800	2	Type_II_REases,Type_II_MTases
-UserReplicon_Retron_I_C_1	Retron	Retron_I_C	NZ_CP033058.2_1085	NZ_CP033058.2_1085	NZ_CP033058.2_1085	1	RT_1_C2
