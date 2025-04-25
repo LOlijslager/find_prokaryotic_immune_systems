@@ -59,8 +59,8 @@ options:
                         In case of conflict between identified systems, should DefenseFinder (DF) or PADLOC (PL) overrule?
                         Default: DF.
   -cpu CPU              How many cores to use for DefenseFinder and PADLOC. Default: max.
-  --no_padloc           "Don't run PADLOC or don't include the results if already run)."
-  --no_defensefinder    `Don't run defensefinder or don't include the results if already run.`
+  --no_padloc           Don't run PADLOC or don't include the results if already run).
+  --no_defensefinder    Don't run defensefinder or don't include the results if already run.
   --reference_file REFERENCE_FILE
                         Provide filepath for the systems reference file. If not, reference file is searched for in the current
                         working directory and the directory this script is located in.
